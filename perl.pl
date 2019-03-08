@@ -16,7 +16,7 @@ my $textentry = $win->add(
     -y => $height 	
 );
 
-my $SERVER = "www.geniestills.com/chat.php";
+my $SERVER = "www.vitalipom.com/chat.php";
  
 my $text = `curl $SERVER`;
 
