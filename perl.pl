@@ -65,4 +65,3 @@ $cui->set_timer(
 
 $cui->set_binding( sub {exit 0;}, "\e" );
 $cui->mainloop;
-
