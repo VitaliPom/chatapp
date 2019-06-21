@@ -1,10 +1,14 @@
-#!/usr/bin/perl -w
- 
+#! /home/linuxbrew/.linuxbrew/opt/perl@5.18/bin/perl -w
+
 use strict;
+use Curses;
 use Curses::UI;
- # create a new C::UI object
+use Curses::UI::Common;
+
+# create a new C::UI object
 my $cui = Curses::UI->new( -clear_on_exit => 1,
-                           -debug => 1, );
+
+                           );
 
 my $win = $cui->add('window_id', 'Window');
 
@@ -16,14 +20,13 @@ my $textentry = $win->add(
     -y => $height 	
 );
 
-my $SERVER = "www.vitalipom.com/chat.php";
+my $SERVER = "192.168.1.13/chat.php";
  
 my $text = `curl $SERVER`;
 
 my $textviewer = $win->add( 
    	 'mytextviewer', 'TextViewer',
 		-text => $text 
-          		 
 );
  
 
@@ -37,11 +40,13 @@ $textentry->set_routine('loose-focus',"\r");
 
 $cui->set_binding( sub {
      $text = $textentry->get();
+     $text =~ s#"#""#;
+     $text =~ s#`#``#;
      `curl $SERVER -d "message=$text"`;
      $text = `curl $SERVER`;
      $textviewer->text($text);
      $textentry->text("");     
-	}, "=" ); 
+	}, KEY_ENTER()); 
 
 $cui->set_binding( sub {
      $text = `curl $SERVER`;
@@ -64,4 +69,6 @@ $cui->set_timer(
 );
 
 $cui->set_binding( sub {exit 0;}, "\e" );
+
 $cui->mainloop;
+
